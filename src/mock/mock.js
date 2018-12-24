@@ -90,5 +90,16 @@ export default {
         }, 300);
       });
     });
+
+    mock.onPost('/user/batchremove').reply(config => {
+      let {ids} = JSON.parse(config.data);
+      ids = ids.split(',');
+      _Users = _Users.filter(u => !ids.includes(u.id));
+      return new Promise(resolve => {
+        setTimeout(() => {
+          resolve([200, {code: 200, msg: '批量删除成功'}]);
+        }, 300);
+      });
+    });
   }
 }

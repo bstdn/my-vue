@@ -27,7 +27,7 @@
 
 <script>
   import mixin from '../../utils/mixin';
-  import {getUserList, deleteUser} from '../../api/api';
+  import {getUserList, deleteUser, batchDeleteUser} from '../../api/api';
   import dataConfig from './config';
 
   export default {
@@ -85,8 +85,25 @@
           });
         }).catch(() => {});
       },
+      // 批量删除
       handleBatchRemove() {
-        console.log('handleBatchRemove');
+        let ids = this.selects.map(item => item.id).toString();
+        this.$confirm('确认删除选中的记录吗?', '提示', {
+          type: 'warning'
+        }).then(() => {
+          this.$store.dispatch('tableLoading');
+          let params = {ids: ids};
+          batchDeleteUser(params).then(res => {
+            this.$store.dispatch('tableLoading');
+            this.$message.success(res.msg);
+            this.getTableList();
+          }).catch(res => {
+            this.$store.dispatch('tableLoading');
+            let {message} = res.response.data;
+            this.$message.error(message);
+          });
+        }).catch(() => {
+        });
       },
       handleSizeChange(val) {
         this.pagination.page = 1;
