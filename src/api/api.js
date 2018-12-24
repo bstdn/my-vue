@@ -7,3 +7,4 @@ export const getUserList = params => { return axios.get('/user/list', { params: 
 export const deleteUser = params => { return axios.post('/user/remove', params).then(res => res.data); };
 export const batchDeleteUser = params => { return axios.post('/user/batchremove', params).then(res => res.data); };
 export const editUser = params => { return axios.post('/user/edit', params).then(res => res.data); };
+export const addUser = params => { return axios.post('/user/add', params).then(res => res.data); };

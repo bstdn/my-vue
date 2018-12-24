@@ -1,5 +1,16 @@
 <template>
   <section>
+    <!-- 工具条 -->
+    <filterBar
+        :dataConfig="dataConfig"
+        :checked="checked"
+        :add="true"
+        :refresh="true"
+        :refreshLoading="refreshLoading"
+        @handleAdd="handleAdd"
+        @handleChecked="handleChecked"
+        @handleRefresh="handleRefresh"
+    ></filterBar>
     <!-- 列表 -->
     <dataTable
         :dataSource="tableContent"
@@ -35,12 +46,25 @@
         @formSubmit="editSubmit"
         @formClose="formClose"
     ></dataForm>
+
+    <!-- 新增 -->
+    <dataForm
+        title="新增"
+        labelWidth="130px"
+        :submitLoading="addLoading"
+        :formVisible.sync="addFormVisible"
+        :dataForm="addForm"
+        :dataFormRules="addFormRules"
+        :formConfig="addFields"
+        @formSubmit="addSubmit"
+        @formClose="formClose"
+    ></dataForm>
   </section>
 </template>
 
 <script>
   import mixin from '../../utils/mixin';
-  import {getUserList, deleteUser, batchDeleteUser, editUser} from '../../api/api';
+  import {getUserList, deleteUser, batchDeleteUser, editUser, addUser} from '../../api/api';
   import dataConfig from './config';
 
   export default {
@@ -49,11 +73,15 @@
     data() {
       return {
         dataConfig: dataConfig.fields,
-        checked: dataConfig.showColumn,
+        checked: localStorage.getItem('showColumn') ? JSON.parse(localStorage.getItem('showColumn')) : dataConfig.showColumn,
         // 编辑
         editForm: dataConfig.editForm,
         editFormRules: dataConfig.editFormRules,
         editFields: dataConfig.editFields,
+        // 新增
+        addForm: dataConfig.addForm,
+        addFormRules: dataConfig.addFormRules,
+        addFields: dataConfig.addFields,
       }
     },
     methods: {
@@ -146,8 +174,31 @@
           this.editLoading = false;
         });
       },
+      // 新增
+      addSubmit(params) {
+        this.addLoading = true;
+        addUser(params).then(res => {
+          this.$message.success(res.msg);
+          this.addFormVisible = false;
+          this.addLoading = false;
+          this.getTableList();
+        }).catch(res => {
+          let {message} = res.response.data;
+          this.$message.error(message);
+          this.addLoading = false;
+        });
+      },
       formClose() {
         this.editFormVisible = false;
+      },
+      handleChecked(val) {
+        this.checked = val;
+        localStorage.setItem('showColumn', JSON.stringify(val));
+      },
+      handleRefresh() {
+        this.refreshLoading = true;
+        this.getTableList();
+        this.refreshLoading = false;
       },
     },
     mounted() {

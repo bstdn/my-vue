@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Mock from 'mockjs';
 import MockAdapter from 'axios-mock-adapter';
 import {LoginUsers, Users} from './data/user';
 
@@ -117,6 +118,17 @@ export default {
       return new Promise(resolve => {
         setTimeout(() => {
           resolve([200, {code: 200, msg: '编辑成功'}])
+        }, 300);
+      });
+    });
+
+    mock.onPost('/user/add').reply(config => {
+      let params = JSON.parse(config.data);
+      params.id = Mock.Random.guid();
+      _Users.push(params);
+      return new Promise(resolve => {
+        setTimeout(() => {
+          resolve([200, {code: 200, msg: '新增成功'}])
         }, 300);
       });
     });
