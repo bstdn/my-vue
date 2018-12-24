@@ -8,6 +8,18 @@
             clearable
             :placeholder="item.placeholder"
         ></el-input>
+        <el-date-picker
+            v-else-if="item.type === 'datetime'"
+            v-model="model[item.value]"
+            type="daterange"
+            align="right"
+            unlink-panels
+            :default-time="['00:00:00', '23:59:59']"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            value-format="timestamp"
+        ></el-date-picker>
         <el-select
             v-else-if="item.type === 'select'"
             v-model="model[item.value]"

@@ -89,12 +89,17 @@
         filters: {
           search: '',
           sex: '',
+          datetime: [],
         },
         filters1: [
           {
             type: 'input',
             value: 'search',
             placeholder: '搜索条件',
+          },
+          {
+            type: 'datetime',
+            value: 'datetime',
           },
           {
             type: 'select',
@@ -124,6 +129,8 @@
           page: page ? page : this.pagination.page,
           page_size: this.pagination.page_size,
           search: this.filters.search,
+          begin_time: this.filters.datetime ? this.filters.datetime[0] : '',
+          end_time: this.filters.datetime ? this.filters.datetime[1] : '',
           sex: this.filters.sex,
         };
         this.$store.dispatch('tableLoading');

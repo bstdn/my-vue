@@ -67,11 +67,11 @@ export default {
     });
 
     mock.onGet('/user/list').reply(config => {
-      let {page, page_size, search, sex} = config.params;
+      let {page, page_size, search, sex, begin_time, end_time} = config.params;
       let mockUsers = _Users.filter(user => {
-        if((search && user.name.indexOf(search) === -1) || (sex && sex !== user.sex)) {
-          return false;
-        }
+        let birth = new Date(user.birth).getTime();
+        if((search && user.name.indexOf(search) === -1 )
+          ||(sex && user.sex !== sex) || (begin_time && end_time && (birth < begin_time || birth > end_time)) ) return false;
         return true;
       });
       let total = mockUsers.length;
