@@ -1,13 +1,27 @@
 <template>
   <el-col :span="24" class="toolbar" style="padding-bottom: 0;">
     <el-form :inline="true" :model="model">
-      <el-form-item v-for="(item, index) in config" :key="index">
+      <el-form-item v-for="(item, index) in config" :style="{width: item.width}" :key="index">
         <el-input
-            :placeholder="item.placeholder"
             v-if="item.type === 'input'"
             v-model="model[item.value]"
             clearable
+            :placeholder="item.placeholder"
         ></el-input>
+        <el-select
+            v-else-if="item.type === 'select'"
+            v-model="model[item.value]"
+            clearable
+            filterable
+            :placeholder="item.placeholder"
+        >
+          <el-option
+              v-for="option in item.path"
+              :key="option.key"
+              :label="option.label"
+              :value="option.key"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-dropdown :hide-on-click="false">

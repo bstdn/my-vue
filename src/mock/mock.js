@@ -67,9 +67,9 @@ export default {
     });
 
     mock.onGet('/user/list').reply(config => {
-      let {page, page_size, search} = config.params;
+      let {page, page_size, search, sex} = config.params;
       let mockUsers = _Users.filter(user => {
-        if(search && user.name.indexOf(search) === -1) {
+        if((search && user.name.indexOf(search) === -1) || (sex && sex !== user.sex)) {
           return false;
         }
         return true;

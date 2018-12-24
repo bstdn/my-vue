@@ -88,12 +88,23 @@
         // 筛选条件
         filters: {
           search: '',
+          sex: '',
         },
         filters1: [
           {
             type: 'input',
             value: 'search',
             placeholder: '搜索条件',
+          },
+          {
+            type: 'select',
+            value: 'sex',
+            placeholder: '性别',
+            path: [
+              {key: 1, label: '男'},
+              {key: 2, label: '女'},
+            ],
+            width: '150px',
           },
         ],
       }
@@ -113,6 +124,7 @@
           page: page ? page : this.pagination.page,
           page_size: this.pagination.page_size,
           search: this.filters.search,
+          sex: this.filters.sex,
         };
         this.$store.dispatch('tableLoading');
         getUserList(params).then(res => {
