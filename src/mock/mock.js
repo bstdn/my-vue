@@ -67,8 +67,13 @@ export default {
     });
 
     mock.onGet('/user/list').reply(config => {
-      let {page, page_size} = config.params;
-      let mockUsers = _Users;
+      let {page, page_size, search} = config.params;
+      let mockUsers = _Users.filter(user => {
+        if(search && user.name.indexOf(search) === -1) {
+          return false;
+        }
+        return true;
+      });
       let total = mockUsers.length;
       mockUsers = mockUsers.filter((u, index) => index < page_size * page && index >= page_size * (page - 1));
       return new Promise(resolve => {

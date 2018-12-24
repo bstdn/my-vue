@@ -6,11 +6,14 @@
         :checked="checked"
         :add="true"
         :refresh="true"
+        :model="filters"
+        :config="filters1"
         :refreshLoading="refreshLoading"
         @handleAdd="handleAdd"
         @handleChecked="handleChecked"
         @handleRefresh="handleRefresh"
     ></filterBar>
+
     <!-- 列表 -->
     <dataTable
         :dataSource="tableContent"
@@ -82,13 +85,34 @@
         addForm: dataConfig.addForm,
         addFormRules: dataConfig.addFormRules,
         addFields: dataConfig.addFields,
+        // 筛选条件
+        filters: {
+          search: '',
+        },
+        filters1: [
+          {
+            type: 'input',
+            value: 'search',
+            placeholder: '搜索条件',
+          },
+        ],
       }
+    },
+    watch: {
+      // 筛选
+      filters: {
+        handler: function() {
+          this.getTableList(1);
+        },
+        deep: true
+      },
     },
     methods: {
       getTableList(page) {
         let params = {
           page: page ? page : this.pagination.page,
           page_size: this.pagination.page_size,
+          search: this.filters.search,
         };
         this.$store.dispatch('tableLoading');
         getUserList(params).then(res => {
@@ -108,28 +132,29 @@
       },
       selectsChange(val) {
         this.selects = val;
-        console.log(val);
       },
       handleEdit(index, row) {
         this.editFormVisible = true;
         this.editForm = Object.assign({}, row);
       },
+      // 单个删除
       handleDel(index, row) {
         this.$confirm('确认删除 ' + row.name + ' 吗', '提示', {
           type: 'warning'
         }).then(() => {
           this.$store.dispatch('tableLoading');
-          let params = { id: row.id };
+          let params = {id: row.id};
           deleteUser(params).then(res => {
             this.$store.dispatch('tableLoading');
             this.$message.success(res.msg);
             this.getTableList();
           }).catch(res => {
             this.$store.dispatch('tableLoading');
-            let { message } = res.response.data;
+            let {message} = res.response.data;
             this.$message.error(message);
           });
-        }).catch(() => {});
+        }).catch(() => {
+        });
       },
       // 批量删除
       handleBatchRemove() {
@@ -190,6 +215,7 @@
       },
       formClose() {
         this.editFormVisible = false;
+        this.addFormVisible = false;
       },
       handleChecked(val) {
         this.checked = val;
@@ -201,6 +227,7 @@
         this.refreshLoading = false;
       },
     },
+    // 模版编译、挂载之后
     mounted() {
       this.getTableList();
     }

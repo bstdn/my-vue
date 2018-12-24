@@ -1,6 +1,14 @@
 <template>
   <el-col :span="24" class="toolbar" style="padding-bottom: 0;">
-    <el-form :inline="true">
+    <el-form :inline="true" :model="model">
+      <el-form-item v-for="(item, index) in config" :key="index">
+        <el-input
+            :placeholder="item.placeholder"
+            v-if="item.type === 'input'"
+            v-model="model[item.value]"
+            clearable
+        ></el-input>
+      </el-form-item>
       <el-form-item>
         <el-dropdown :hide-on-click="false">
           <el-button class="el-dropdown-link">
@@ -42,6 +50,8 @@
       'add',
       'refresh',
       'refreshLoading',
+      'model',
+      'config',
     ],
     methods: {
       handleAdd() {
