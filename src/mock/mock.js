@@ -1,6 +1,8 @@
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-import {LoginUsers} from './data/user';
+import {LoginUsers, Users} from './data/user';
+
+let _Users = Users;
 
 export default {
   start() {
@@ -59,6 +61,32 @@ export default {
           } else {
             resolve([200, {code: 500, msg: '修改失败'}]);
           }
+        }, 300);
+      });
+    });
+
+    mock.onGet('/user/list').reply(config => {
+      let {page, page_size} = config.params;
+      let mockUsers = _Users;
+      let total = mockUsers.length;
+      mockUsers = mockUsers.filter((u, index) => index < page_size * page && index >= page_size * (page - 1));
+      return new Promise(resolve => {
+        setTimeout(() => {
+          resolve([200, {
+            users: mockUsers,
+            count: total,
+            current: page,
+          }]);
+        }, 300);
+      });
+    });
+
+    mock.onPost('/user/remove').reply(config => {
+      let userInfo = JSON.parse(config.data);
+      _Users = _Users.filter(u => u.id !== userInfo.id);
+      return new Promise(resolve => {
+        setTimeout(() => {
+          resolve([200, {code: 200, msg: '删除成功'}]);
         }, 300);
       });
     });
