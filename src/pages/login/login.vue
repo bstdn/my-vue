@@ -48,7 +48,7 @@
               } else {
                 this.$message.success(msg);
                 sessionStorage.setItem('user', JSON.stringify(user));
-                this.$router.push({path: '/'});
+                this.$router.push({path: '/user'});
               }
             });
           } else {
