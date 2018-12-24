@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <router-view/>
+    <transition name="fade" mode="out-in">
+      <router-view/>
+    </transition>
   </div>
 </template>
 
@@ -10,6 +12,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss">
+  @import "./style/reset.css";
+  @import "./style/mixin.scss";
+  @import "./style/style.scss";
 </style>
