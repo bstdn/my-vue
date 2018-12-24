@@ -101,5 +101,24 @@ export default {
         }, 300);
       });
     });
+
+    mock.onPost('/user/edit').reply(config => {
+      let userInfo = JSON.parse(config.data);
+      _Users.some(u => {
+        if(u.id === userInfo.id) {
+          u.name = userInfo.name;
+          u.addr = userInfo.addr;
+          u.age = userInfo.age;
+          u.birth = userInfo.birth;
+          u.sex = userInfo.sex;
+          return true;
+        }
+      });
+      return new Promise(resolve => {
+        setTimeout(() => {
+          resolve([200, {code: 200, msg: '编辑成功'}])
+        }, 300);
+      });
+    });
   }
 }

@@ -22,12 +22,25 @@
         @handleSizeChange="handleSizeChange"
         @handleCurrentChange="handleCurrentChange"
     ></pagination>
+
+    <!-- 编辑 -->
+    <dataForm
+        title="编辑"
+        labelWidth="130px"
+        :submitLoading="editLoading"
+        :formVisible.sync="editFormVisible"
+        :dataForm="editForm"
+        :dataFormRules="editFormRules"
+        :formConfig="editFields"
+        @formSubmit="editSubmit"
+        @formClose="formClose"
+    ></dataForm>
   </section>
 </template>
 
 <script>
   import mixin from '../../utils/mixin';
-  import {getUserList, deleteUser, batchDeleteUser} from '../../api/api';
+  import {getUserList, deleteUser, batchDeleteUser, editUser} from '../../api/api';
   import dataConfig from './config';
 
   export default {
@@ -37,6 +50,10 @@
       return {
         dataConfig: dataConfig.fields,
         checked: dataConfig.showColumn,
+        // 编辑
+        editForm: dataConfig.editForm,
+        editFormRules: dataConfig.editFormRules,
+        editFields: dataConfig.editFields,
       }
     },
     methods: {
@@ -66,7 +83,8 @@
         console.log(val);
       },
       handleEdit(index, row) {
-        console.log(row);
+        this.editFormVisible = true;
+        this.editForm = Object.assign({}, row);
       },
       handleDel(index, row) {
         this.$confirm('确认删除 ' + row.name + ' 吗', '提示', {
@@ -113,6 +131,23 @@
       handleCurrentChange(val) {
         this.pagination.page = val;
         this.getTableList();
+      },
+      // 编辑
+      editSubmit(params) {
+        this.editLoading = true;
+        editUser(params).then(res => {
+          this.$message.success(res.msg);
+          this.editFormVisible = false;
+          this.editLoading = false;
+          this.getTableList();
+        }).catch(res => {
+          let {message} = res.response.data;
+          this.$message.error(message);
+          this.editLoading = false;
+        });
+      },
+      formClose() {
+        this.editFormVisible = false;
       },
     },
     mounted() {

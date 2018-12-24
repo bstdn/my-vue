@@ -4,6 +4,9 @@ let mixin = {
       tableContent: [],
       total: 0,
       selects: [],
+      // 编辑界面
+      editFormVisible: false,
+      editLoading: false,
       pagination: {
         page: 1,
         page_size: 20,
