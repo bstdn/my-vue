@@ -7,9 +7,7 @@ import ElementUI from 'element-ui'
 import 'font-awesome/css/font-awesome.min.css'
 import components from './components'
 import store from './store/index'
-import Mock from './mock'
-
-Mock.start();
+import './mock'
 
 Vue.use(ElementUI);
 Vue.use(components);
