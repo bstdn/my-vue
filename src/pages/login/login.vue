@@ -6,7 +6,7 @@
         <el-input type="text" suffix-icon="fa fa-user" v-model="form2.username" placeholder="账号" clearable></el-input>
       </el-form-item>
       <el-form-item prop="password">
-        <el-input type="password" suffix-icon="fa fa-unlock-alt" v-model="form2.password" placeholder="密码" clearable autocomplete="off"></el-input>
+        <el-input type="password" suffix-icon="fa fa-unlock-alt" v-model="form2.password" placeholder="密码" clearable autocomplete="off" @keyup.enter.native="handleSubmit"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click.native.prevent="handleSubmit">登录</el-button>
